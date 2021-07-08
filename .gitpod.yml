@@ -1,0 +1,19 @@
+
+checkoutLocation: "go/src/github.com/ajhalili2006/gotty"
+workspaceLocation: "."
+
+# Use default image
+image: gitpod/workspace-full
+
+# tasks
+tasks:
+  - name: devbuild
+    command: |
+      cd /workspace/go/src/github.com/demo-apps/go-gin-app
+      go get -v ./...
+      make all
+
+# Extensions
+vscode:
+  extensions:
+    - golang.go
