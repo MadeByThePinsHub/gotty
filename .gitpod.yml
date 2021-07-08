@@ -1,15 +1,15 @@
-
+# Add config stuff for my fork, see https://www.gitpod.io/docs/checkout-location
 checkoutLocation: "go/src/github.com/ajhalili2006/gotty"
-workspaceLocation: "."
+workspaceLocation: "go/src/github.com/ajhalili2006/gotty"
 
 # Use default image
-image: gitpod/workspace-full
+image:
+  image: .gitpod.Dockerfile
 
 # tasks
 tasks:
   - name: devbuild
     command: |
-      cd /workspace/go/src/github.com/demo-apps/go-gin-app
       go get -v ./...
       make all
 
