@@ -10,10 +10,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       
-      # TODO: Add setup Golang and Node.js stuff here
+      # Setup Golang env first
+      - name: Setup Go environment
+        uses: actions/setup-go@v2.1.3
+      # Then upgrade to Node.js 16.x
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.2.0
+        with:
+          # Node.js 16.x is still not an LTS as of time of commiting this file
+          # But we should test it BTW.
+          node-version: 16.x
 
       - name: Upgrade npmjs
-        run: npm i -g npm
+        run: sudonpm i -g npm
 
       - name: Install build tools
         run: |
