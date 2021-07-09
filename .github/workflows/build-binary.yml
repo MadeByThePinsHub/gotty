@@ -1,0 +1,29 @@
+name: Build and upload to JFrog Artifactory
+
+on:
+  push:
+
+jobs:
+  build-binary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      # TODO: Add setup Golang and Node.js stuff here
+
+      - name: Upgrade npmjs
+        run: npm i -g npm
+
+      - name: Install build tools
+        run: |
+          env | grep GOPATH
+          make install-tools
+
+      - name: Build Golang binary
+        run: make
+
+      - name: Test built binary
+        run: ./gotty -v
+
+      # TODO: Add stuff for collecting build artifacts here

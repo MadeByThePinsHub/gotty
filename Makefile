@@ -1,6 +1,6 @@
 OUTPUT_DIR = ./builds
 GIT_COMMIT = `git rev-parse HEAD | cut -c1-7`
-VERSION = 2.0.0-alpha.3
+VERSION = 0.1.0-upstream-2-0-0-alpha3
 BUILD_OPTIONS = -ldflags "-X main.Version=$(VERSION) -X main.CommitID=$(GIT_COMMIT)"
 
 gotty: main.go server/*.go webtty/*.go backend/*.go Makefile
@@ -62,6 +62,9 @@ tools:
 	go get github.com/mitchellh/gox
 	go get github.com/tcnksm/ghr
 	go get github.com/jteeuwen/go-bindata/...
+
+# Shortcut for the tools script above, for the CI stuff
+install-tools: tools
 
 test:
 	if [ `go fmt $(go list ./... | grep -v /vendor/) | wc -l` -gt 0 ]; then echo "go fmt error"; exit 1; fi
