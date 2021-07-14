@@ -1,6 +1,7 @@
 # Add config stuff for my fork, see https://www.gitpod.io/docs/checkout-location
-checkoutLocation: "go/src/github.com/ajhalili2006/gotty"
-workspaceLocation: "go/src/github.com/ajhalili2006/gotty"
+# Possibly rename to gotty for compartibility, probably.
+#checkoutLocation: "go/src/github.com/MadeByThePinsHub/yudai-gotty"
+#workspaceLocation: "go/src/github.com/MadeByThePinsHub/yudai-gotty"
 
 # Use default image
 image:
@@ -11,7 +12,7 @@ tasks:
   - name: devbuild
     command: |
       go get -v ./...
-      make all
+      make tools && make
 
 # Extensions
 vscode:
