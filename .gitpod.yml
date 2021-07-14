@@ -1,7 +1,7 @@
 # Add config stuff for my fork, see https://www.gitpod.io/docs/checkout-location
 # Possibly rename to gotty for compartibility, probably.
-#checkoutLocation: "go/src/github.com/MadeByThePinsHub/yudai-gotty"
-#workspaceLocation: "go/src/github.com/MadeByThePinsHub/yudai-gotty"
+#checkoutLocation: "go/src/github.com/MadeByThePinsHub/gotty"
+#workspaceLocation: "go/src/github.com/MadeByThePinsHub/gotty"
 
 # Use default image
 image:
@@ -13,6 +13,9 @@ tasks:
     command: |
       go get -v ./...
       make tools && make
+      gp sync-done gitpod-binary-build
+  - name: Test built binary
+    command: $PWD/gotty -w --reconnect docker run -it --rm --workdir /workspace -v /workspace/.gotty-devel/csb-starter-pack:/workspace ghcr.io/code-server-boilerplates/starter-pack:develop shell
 
 # Extensions
 vscode:

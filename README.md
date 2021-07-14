@@ -1,6 +1,6 @@
 # Andrei Jiroh's GoTTY fork for Docker builds
 
-> This fork has been archived as he moved the development for this fork to [`MadeByThePinsHub/yudai-gotty`](https://github.com/MadeByThePinsHub/yudai-gotty). Same licensing applies as I don't want to get f**ked by DMCA for plagrizing code, while keeping the rest of docs to the upstream.
+> This fork has been archived as he moved the development for this fork to [`MadeByThePinsHub/gotty`](https://github.com/MadeByThePinsHub/gotty). Same licensing applies as I don't want to get f**ked by DMCA for plagrizing code, while keeping the rest of docs to the upstream.
 
 This fork is only used for [The Pins Team](https://github.com/MadeByThePinsHub)'s repos, especially on the [hc-vault-docker-template](https://github.com/MadeByThePinsHub/hc-vault-docker-template) repo.
 
@@ -8,7 +8,7 @@ This fork is only used for [The Pins Team](https://github.com/MadeByThePinsHub)'
 
 ### In Gitpod
 
-1. [Open this repo](https://gitpod.io/#github.com/ajhalili2006/gotty) in Gitpod. Sign in if prompted.
+1. [Open this repo](https://gitpod.io/#github.com/MadeByThePinsHub/gotty) in Gitpod. Sign in if prompted.
 2. Once the build succeed, get the URL of web terminal with `gp url 8080`
 3. Happy hacking!
 

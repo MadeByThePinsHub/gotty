@@ -1,4 +1,4 @@
-module github.com/MadeByThePinsHub/yudai-gotty
+module github.com/MadeByThePinsHub/gotty
 
 go 1.16
 
