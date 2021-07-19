@@ -1,6 +1,7 @@
 OUTPUT_DIR = ./builds
 GIT_COMMIT = `git rev-parse HEAD | cut -c1-7`
 VERSION = 0.1.0-upstream-2-0-0-alpha3
+REPO_OWNER = MadeByThePinsHub
 BUILD_OPTIONS = -ldflags "-X main.Version=$(VERSION) -X main.CommitID=$(GIT_COMMIT)"
 
 gotty: main.go server/*.go webtty/*.go backend/*.go Makefile
@@ -59,9 +60,9 @@ js/node_modules/webpack:
 
 tools:
 	# go get github.com/tools/godep
-	go get github.com/mitchellh/gox
-	go get github.com/tcnksm/ghr
-	go get github.com/jteeuwen/go-bindata/...
+	go get -v github.com/mitchellh/gox
+	go get -v github.com/tcnksm/ghr
+	go get -v github.com/jteeuwen/go-bindata/...
 
 # Shortcut for the tools script above, for the CI stuff
 install-tools: tools
@@ -80,4 +81,4 @@ shasums:
 	cd ${OUTPUT_DIR}/dist; sha256sum * > ./SHA256SUMS
 
 release:
-	ghr -c ${GIT_COMMIT} --delete --prerelease -u yudai -r gotty pre-release ${OUTPUT_DIR}/dist
+	ghr -c ${GIT_COMMIT} --delete --prerelease -u ${REPO_OWNER} -r gotty pre-release ${OUTPUT_DIR}/dist
