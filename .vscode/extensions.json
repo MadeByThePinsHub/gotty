@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "golang.go",
+        "eamodio.gitlens",
+        "ms-vscode.makefile-tools",
+        "vscode-icons-team.vscode-icons"
+    ]
+}

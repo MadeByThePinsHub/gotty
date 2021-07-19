@@ -1,0 +1,15 @@
+{
+    "makefile.extensionOutputFolder": "./builds", // Probably?
+    "git.alwaysSignOff": true,
+    "[git-commit]": {
+        // 50 is probably fine, but remember that 72 is the hard limit
+        "editor.rulers": [
+            50, 72
+        ],
+        "workbench.editor.restoreViewState": false,
+        "diffEditor.wordWrap": "on"
+    },
+    "go.lintOnSave": "workspace",
+    "git.showProgress": true,
+    "gitlens.sortContributorsBy": "count:asc"
+}
