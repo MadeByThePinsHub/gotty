@@ -15,10 +15,14 @@ github.com/gorilla/websocket
 # github.com/hashicorp/go-multierror v0.0.0-20150608033521-56912fb08d85
 ## explicit
 github.com/hashicorp/go-multierror
-# github.com/kr/pty v0.0.0-20150511174710-5cf931ef8f76
+# github.com/jteeuwen/go-bindata v3.0.7+incompatible
+## explicit
+# github.com/kr/pty v1.1.1
 ## explicit
 github.com/kr/pty
-# github.com/pkg/errors v0.8.1-0.20161029093637-248dadf4e906
+# github.com/mitchellh/gox v1.0.1
+## explicit
+# github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
 # github.com/russross/blackfriday/v2 v2.0.1
@@ -26,6 +30,8 @@ github.com/russross/blackfriday/v2
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
 # github.com/stretchr/testify v1.7.0
+## explicit
+# github.com/tcnksm/ghr v0.14.0
 ## explicit
 # github.com/urfave/cli v1.22.5
 ## explicit
