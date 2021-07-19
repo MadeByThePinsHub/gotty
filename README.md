@@ -10,17 +10,10 @@ This fork is only used for [The Pins Team](https://github.com/MadeByThePinsHub)'
 
 1. [Open this repo](https://gitpod.io/#github.com/MadeByThePinsHub/gotty) in Gitpod. Sign in if prompted.
 2. Once the build succeed, get the URL of web terminal with `gp url 8080`
-3. Happy hacking!
+3. Happy hacking! (We'll working on to do hot reloading)
 
-## More Docs Stuff
+## More Docs Stuff and Credits
 
-[See the upstream's README](https://github.com/yudai/gotty) for the docs.
+[See the upstream's README](https://github.com/yudai/gotty) for the docs. 
 
-## TODOs
-
-Since the upstream possibly abandoned the project, the work is on the forks like mine, so here are some of the backlog I have:
-
-* [ ] Update old links from `github.com/codegangsta/cli` to `github.com/urfave/cli`
-* [ ] Upgrade codebase to Golang 1.16.x, probably
-* [ ] Write CI for unit testing and vunlerability scanning.
-* [ ] Configure Dependabot for development toolchain and dependency upgrades.
+**Legalese text**: [Original work](https://github.com/yudai/gotty) by [Iwasaki Yudai](https://github.com/yudai), which is now abandoned. There would be no GoTTY without him. ❤️ We used [this fork](https://github.com/sorenisanerd/gotty) currently maintained by [Soren L. Hansen](https://github.com/sorenisanerd)

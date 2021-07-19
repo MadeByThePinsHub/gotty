@@ -1,27 +1,22 @@
-# github.com/NYTimes/gziphandler v0.0.0-20170804200234-967539e5e271
+# github.com/NYTimes/gziphandler v1.1.1
 ## explicit
 github.com/NYTimes/gziphandler
 # github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d
 github.com/cpuguy83/go-md2man/v2/md2man
-# github.com/elazarl/go-bindata-assetfs v0.0.0-20150813044622-d5cac425555c
+# github.com/creack/pty v1.1.11
 ## explicit
-github.com/elazarl/go-bindata-assetfs
-# github.com/fatih/structs v0.0.0-20150526064352-a9f7daa9c272
+github.com/creack/pty
+# github.com/fatih/structs v1.1.0
 ## explicit
 github.com/fatih/structs
-# github.com/gorilla/websocket v0.0.0-20150811171432-b6ab76f1fe98
+# github.com/gorilla/websocket v1.4.2
 ## explicit
 github.com/gorilla/websocket
-# github.com/hashicorp/go-multierror v0.0.0-20150608033521-56912fb08d85
+# github.com/hashicorp/errwrap v1.0.0
+github.com/hashicorp/errwrap
+# github.com/hashicorp/go-multierror v1.1.1
 ## explicit
 github.com/hashicorp/go-multierror
-# github.com/jteeuwen/go-bindata v3.0.7+incompatible
-## explicit
-# github.com/kr/pty v1.1.1
-## explicit
-github.com/kr/pty
-# github.com/mitchellh/gox v1.0.1
-## explicit
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
@@ -29,15 +24,15 @@ github.com/pkg/errors
 github.com/russross/blackfriday/v2
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
-# github.com/stretchr/testify v1.7.0
+# github.com/urfave/cli/v2 v2.3.0
 ## explicit
-# github.com/tcnksm/ghr v0.14.0
-## explicit
-# github.com/urfave/cli v1.22.5
-## explicit
-github.com/urfave/cli
+github.com/urfave/cli/v2
 # github.com/yudai/hcl v0.0.0-20151013225006-5fa2393b3552
 ## explicit
 github.com/yudai/hcl
 github.com/yudai/hcl/hcl
 github.com/yudai/hcl/json
+# golang.org/x/sys v0.0.0-20210415045647-66c3f260301c
+## explicit
+golang.org/x/sys/internal/unsafeheader
+golang.org/x/sys/unix

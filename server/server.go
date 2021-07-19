@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"html/template"
+	"io/fs"
 	"io/ioutil"
 	"log"
 	"net"
@@ -14,10 +15,11 @@ import (
 	"time"
 
 	"github.com/NYTimes/gziphandler"
-	assetfs "github.com/elazarl/go-bindata-assetfs"
+
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
 
+	"github.com/MadeByThePinsHub/gotty/bindata"
 	"github.com/MadeByThePinsHub/gotty/pkg/homedir"
 	"github.com/MadeByThePinsHub/gotty/pkg/randomstring"
 	"github.com/MadeByThePinsHub/gotty/webtty"
@@ -28,15 +30,16 @@ type Server struct {
 	factory Factory
 	options *Options
 
-	upgrader      *websocket.Upgrader
-	indexTemplate *template.Template
-	titleTemplate *noesctmpl.Template
+	upgrader         *websocket.Upgrader
+	indexTemplate    *template.Template
+	titleTemplate    *noesctmpl.Template
+	manifestTemplate *template.Template
 }
 
 // New creates a new instance of Server.
 // Server will use the New() of the factory provided to handle each request.
 func New(factory Factory, options *Options) (*Server, error) {
-	indexData, err := Asset("static/index.html")
+	indexData, err := bindata.Fs.ReadFile("static/index.html")
 	if err != nil {
 		panic("index not found") // must be in bindata
 	}
@@ -50,6 +53,15 @@ func New(factory Factory, options *Options) (*Server, error) {
 	indexTemplate, err := template.New("index").Parse(string(indexData))
 	if err != nil {
 		panic("index template parse failed") // must be valid
+	}
+
+	manifestData, err := bindata.Fs.ReadFile("static/manifest.json")
+	if err != nil {
+		panic("manifest not found") // must be in bindata
+	}
+	manifestTemplate, err := template.New("manifest").Parse(string(manifestData))
+	if err != nil {
+		panic("manifest template parse failed") // must be valid
 	}
 
 	titleTemplate, err := noesctmpl.New("title").Parse(options.TitleFormat)
@@ -78,8 +90,9 @@ func New(factory Factory, options *Options) (*Server, error) {
 			Subprotocols:    webtty.Protocols,
 			CheckOrigin:     originChekcer,
 		},
-		indexTemplate: indexTemplate,
-		titleTemplate: titleTemplate,
+		indexTemplate:    indexTemplate,
+		titleTemplate:    titleTemplate,
+		manifestTemplate: manifestTemplate,
 	}, nil
 }
 
@@ -95,7 +108,7 @@ func (server *Server) Run(ctx context.Context, options ...RunOption) error {
 
 	counter := newCounter(time.Duration(server.options.Timeout) * time.Second)
 
-	path := "/"
+	path := server.options.Path
 	if server.options.EnableRandomUrl {
 		path = "/" + randomstring.Generate(server.options.RandomUrlLength) + "/"
 	}
@@ -127,10 +140,10 @@ func (server *Server) Run(ctx context.Context, options ...RunOption) error {
 		scheme = "https"
 	}
 	host, port, _ := net.SplitHostPort(listener.Addr().String())
-	log.Printf("HTTP server is listening at: %s", scheme+"://"+host+":"+port+path)
+	log.Printf("HTTP server is listening at: %s", scheme+"://"+net.JoinHostPort(host, port)+path)
 	if server.options.Address == "0.0.0.0" {
 		for _, address := range listAddresses() {
-			log.Printf("Alternative URL: %s", scheme+"://"+address+":"+port+path)
+			log.Printf("Alternative URL: %s", scheme+"://"+net.JoinHostPort(address, port)+path)
 		}
 	}
 
@@ -181,16 +194,21 @@ func (server *Server) Run(ctx context.Context, options ...RunOption) error {
 }
 
 func (server *Server) setupHandlers(ctx context.Context, cancel context.CancelFunc, pathPrefix string, counter *counter) http.Handler {
-	staticFileHandler := http.FileServer(
-		&assetfs.AssetFS{Asset: Asset, AssetDir: AssetDir, Prefix: "static"},
-	)
+	fs, err := fs.Sub(bindata.Fs, "static")
+	if err != nil {
+		log.Fatalf("failed to open static/ subdirectory of embedded filesystem: %v", err)
+	}
+	staticFileHandler := http.FileServer(http.FS(fs))
 
 	var siteMux = http.NewServeMux()
 	siteMux.HandleFunc(pathPrefix, server.handleIndex)
 	siteMux.Handle(pathPrefix+"js/", http.StripPrefix(pathPrefix, staticFileHandler))
-	siteMux.Handle(pathPrefix+"favicon.png", http.StripPrefix(pathPrefix, staticFileHandler))
+	siteMux.Handle(pathPrefix+"favicon.ico", http.StripPrefix(pathPrefix, staticFileHandler))
+	siteMux.Handle(pathPrefix+"icon.svg", http.StripPrefix(pathPrefix, staticFileHandler))
 	siteMux.Handle(pathPrefix+"css/", http.StripPrefix(pathPrefix, staticFileHandler))
+	siteMux.Handle(pathPrefix+"icon_192.png", http.StripPrefix(pathPrefix, staticFileHandler))
 
+	siteMux.HandleFunc(pathPrefix+"manifest.json", server.handleManifest)
 	siteMux.HandleFunc(pathPrefix+"auth_token.js", server.handleAuthToken)
 	siteMux.HandleFunc(pathPrefix+"config.js", server.handleConfig)
 

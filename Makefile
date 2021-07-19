@@ -1,38 +1,40 @@
 OUTPUT_DIR = ./builds
 GIT_COMMIT = `git rev-parse HEAD | cut -c1-7`
-VERSION = 0.1.0-upstream-2-0-0-alpha3
-REPO_OWNER = MadeByThePinsHub
-BUILD_OPTIONS = -ldflags "-X main.Version=$(VERSION) -X main.CommitID=$(GIT_COMMIT)"
+VERSION = $(shell git describe --tags)
+BUILD_OPTIONS = -ldflags "-X main.Version=$(VERSION)"
 
-gotty: main.go server/*.go webtty/*.go backend/*.go Makefile
+gotty: main.go assets server/*.go webtty/*.go backend/*.go Makefile
 	go build ${BUILD_OPTIONS}
 
-.PHONY: asset
-asset: bindata/static/js/gotty-bundle.js bindata/static/index.html bindata/static/favicon.png bindata/static/css/index.css bindata/static/css/xterm.css bindata/static/css/xterm_customize.css
-	go-bindata -prefix bindata -pkg server -ignore=\\.gitkeep -o server/asset.go bindata/...
-	gofmt -w server/asset.go
+docker: 
+	docker build . -t gotty-bash:$(VERSION)
+
+.PHONY: assets
+assets: bindata/static/js/gotty.js bindata/static/index.html bindata/static/icon.svg bindata/static/favicon.ico bindata/static/css/index.css bindata/static/css/xterm.css bindata/static/css/xterm_customize.css bindata/static/manifest.json bindata/static/icon_192.png
 
 .PHONY: all
-all: asset gotty
+all: gotty docker
 
-bindata:
-	mkdir bindata
+bindata/static:
+	mkdir -p bindata/static
 
-bindata/static: bindata
-	mkdir bindata/static
+bindata/static/icon.svg: bindata/static resources/icon.svg
+	cp resources/icon.svg bindata/static/icon.svg
 
 bindata/static/index.html: bindata/static resources/index.html
 	cp resources/index.html bindata/static/index.html
 
-bindata/static/favicon.png: bindata/static resources/favicon.png
-	cp resources/favicon.png bindata/static/favicon.png
+bindata/static/manifest.json: bindata/static resources/manifest.json
+	cp resources/manifest.json bindata/static/manifest.json
+
+bindata/static/favicon.ico: bindata/static resources/favicon.ico
+	cp resources/favicon.ico bindata/static/favicon.ico
+
+bindata/static/icon_192.png: bindata/static resources/icon_192.png
+	cp resources/icon_192.png bindata/static/icon_192.png
 
 bindata/static/js: bindata/static
 	mkdir -p bindata/static/js
-
-
-bindata/static/js/gotty-bundle.js: bindata/static/js js/dist/gotty-bundle.js
-	cp js/dist/gotty-bundle.js bindata/static/js/gotty-bundle.js
 
 bindata/static/css: bindata/static
 	mkdir -p bindata/static/css
@@ -43,35 +45,36 @@ bindata/static/css/index.css: bindata/static/css resources/index.css
 bindata/static/css/xterm_customize.css: bindata/static/css resources/xterm_customize.css
 	cp resources/xterm_customize.css bindata/static/css/xterm_customize.css
 
-bindata/static/css/xterm.css: bindata/static/css js/node_modules/xterm/dist/xterm.css
-	cp js/node_modules/xterm/dist/xterm.css bindata/static/css/xterm.css
+bindata/static/css/xterm.css: bindata/static/css js/node_modules/xterm/css/xterm.css
+	cp js/node_modules/xterm/css/xterm.css bindata/static/css/xterm.css
 
 js/node_modules/xterm/dist/xterm.css:
 	cd js && \
 	npm install
 
-js/dist/gotty-bundle.js: js/src/* js/node_modules/webpack
+bindata/static/js/gotty.js: js/src/* js/node_modules/webpack
 	cd js && \
-	`npm bin`/webpack
+	npx webpack
 
 js/node_modules/webpack:
 	cd js && \
 	npm install
 
-tools:
-	# go get github.com/tools/godep
-	go get -v github.com/mitchellh/gox
-	go get -v github.com/tcnksm/ghr
-	go get -v github.com/jteeuwen/go-bindata/...
+README-options:
+	./gotty --help | sed '1,/GLOBAL OPTIONS/ d' > options.txt.tmp
+	sed -f README.md.sed -i README.md
+	rm options.txt.tmp
 
-# Shortcut for the tools script above, for the CI stuff
-install-tools: tools
+tools:
+	go get github.com/mitchellh/gox
+	go get github.com/tcnksm/ghr
 
 test:
 	if [ `go fmt $(go list ./... | grep -v /vendor/) | wc -l` -gt 0 ]; then echo "go fmt error"; exit 1; fi
+	go test ./...
 
 cross_compile:
-	GOARM=5 gox -os="darwin linux freebsd netbsd openbsd" -arch="386 amd64 arm" -osarch="!darwin/arm" -output "${OUTPUT_DIR}/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}"
+	GOARM=5 gox -os="darwin linux freebsd netbsd openbsd solaris" -arch="386 amd64 arm arm64" -osarch="!darwin/386" -osarch="!darwin/arm" $(BUILD_OPTIONS) -output "${OUTPUT_DIR}/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}"
 
 targz:
 	mkdir -p ${OUTPUT_DIR}/dist
@@ -80,5 +83,10 @@ targz:
 shasums:
 	cd ${OUTPUT_DIR}/dist; sha256sum * > ./SHA256SUMS
 
+release-artifacts: gotty cross_compile targz shasums
+
 release:
-	ghr -c ${GIT_COMMIT} --delete --prerelease -u ${REPO_OWNER} -r gotty pre-release ${OUTPUT_DIR}/dist
+	ghr -draft ${VERSION} ${OUTPUT_DIR}/dist # -c ${GIT_COMMIT} --delete --prerelease -u sorenisanerd -r gotty ${VERSION}
+
+clean:
+	rm -fr gotty builds js/dist bindata/static
