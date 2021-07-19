@@ -1,4 +1,4 @@
-name: Build and upload to JFrog Artifactory
+name: Build binary
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
           node-version: 16.x
 
       - name: Upgrade npmjs
-        run: sudonpm i -g npm
+        run: sudo npm i -g npm
 
       - name: Install build tools
         run: |
@@ -33,6 +33,11 @@ jobs:
         run: make
 
       - name: Test built binary
-        run: ./gotty -v
+        run: |
+          if [ -f "./gotty" ]; then
+            ./gotty -v
+          else
+            echo "Doubt?" && exit 1
+          fi
 
       # TODO: Add stuff for collecting build artifacts here
