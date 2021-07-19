@@ -1,0 +1,48 @@
+name: Pull from upstream
+
+on:
+  #push:
+  #schedule:
+  #  - cron: "30 12 * * *"
+  workflow_dispatch:
+
+jobs:
+  generate-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{secrets.GH_SERVICE_ACCOUNT_API_KEY}}
+      - name: Create seperate branch and add remote
+        run: |
+          git remote add upstream
+          git fetch --all
+          git checkout -b chores/pull-from-upstream --track upstream/
+          git push origin HEAD:chores/pull-from-upstream --force-with-lease
+  create-pr-scheduled:
+    runs-on: ubuntu-latest
+    if: github.event_name == "workflow_dispatch"
+    env:
+      GH_ACTOR: ${{github.actor}}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{secrets.GH_SERVICE_ACCOUNT_API_KEY}}
+      - name: Generate branch for this schedule
+      - name: Generate pull request
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{secrets.GH_SERVICE_ACCOUNT_API_KEY}}
+          script: |
+            github.pulls.create({
+              owner: "MadeByThePinsHub",
+              repo: "gotty",
+              base: "main",
+              head: "chores/pull-from-upstream",
+              title: "chore: pull upstream changes",
+              body: "This PR has been generated manually by @" + process.env.GH_ACTOR ", to pull upstream changes from"
+            })
+            
+        

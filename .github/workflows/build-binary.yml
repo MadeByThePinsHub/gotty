@@ -26,8 +26,7 @@ jobs:
 
       - name: Install build tools
         run: |
-          env | grep GOPATH
-          make install-tools
+          make tools
 
       - name: Build Golang binary
         run: make
@@ -41,3 +40,11 @@ jobs:
           fi
 
       # TODO: Add stuff for collecting build artifacts here
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          # Artifact name
+          name: gotty-build
+          # A file, directory or wildcard pattern that describes what to upload
+          path: ./gotty
+          retention-days: 14
