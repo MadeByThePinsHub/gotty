@@ -1,15 +1,19 @@
 {
-    "makefile.extensionOutputFolder": "./.vscode", // Probably?
-    "git.alwaysSignOff": true,
+    "workbench.iconTheme": "vscode-icons",
+    "makefile.extensionOutputFolder": "./.vscode", // just extension logs probably
+    "git.alwaysSignOff": true, // just DCO compliance
     "[git-commit]": {
         // 50 is probably fine, but remember that 72 is the hard limit
         "editor.rulers": [
-            50, 72
+            72
         ],
         "workbench.editor.restoreViewState": false,
         "diffEditor.wordWrap": "on"
     },
     "go.lintOnSave": "workspace",
     "git.showProgress": true,
-    "gitlens.sortContributorsBy": "count:asc"
+    "gitlens.sortContributorsBy": "count:asc",
+    "yaml.schemas": {
+        ".vscode/yml-schemas/gitpod.json": ".gitpod.yml"
+    }
 }

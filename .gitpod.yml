@@ -1,4 +1,3 @@
----
 # Use default image
 image:
   file: .gitpod.Dockerfile
@@ -8,8 +7,11 @@ image:
 tasks:
   - name: devbuild
     init: |
+      # add @sorenisanerd's fork and fetch everything
+      git remote add upstream https://github.com/sorenisanerd/gotty && git fetch --all
+
+      # Install dependencies, tools are installed at workspace image-level
       go get -v ./...
-      make tools 
     command: |
       make && gp sync-done gitpod-binary-build
   - name: Test built binary

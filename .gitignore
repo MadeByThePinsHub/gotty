@@ -143,11 +143,15 @@ dist
 .pnp.*
 
 ### VisualStudioCode ###
-.vscode/*
+# Extension logs
+.vscode/*.log
+# Project-level stuff
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+# Custom YAML schemas
+!.vscode/yml-schemas/*.json
 *.code-workspace
 
 # Local History for Visual Studio Code
