@@ -1,5 +1,5 @@
 {
-    "makefile.extensionOutputFolder": "./builds", // Probably?
+    "makefile.extensionOutputFolder": "./.vscode", // Probably?
     "git.alwaysSignOff": true,
     "[git-commit]": {
         // 50 is probably fine, but remember that 72 is the hard limit
