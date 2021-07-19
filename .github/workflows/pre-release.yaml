@@ -1,10 +1,10 @@
 ---
-name: "pre-release"
+name: Generate an pre-release
 
 on:
   push:
     branches:
-      - "master"
+      - "main"
 
 
 jobs:
@@ -28,10 +28,10 @@ jobs:
 
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest"
+        repo_token: "${{ secrets.GH_SERVICE_ACCOUNT_API_KEY }}"
+        automatic_release_tag: develop
         prerelease: true
-        title: "Development Build"
+        title: "golang-builds:develop"
         files: |
           LICENSE
           builds/dist/*
